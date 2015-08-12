@@ -18,7 +18,7 @@ import isodate
 import requests
 
 from ulmo import util
-import ulmo.waterml.v1_1 as wml
+from ulmo.parsers import waterml
 
 
 INSTANTANEOUS_URL = "http://waterservices.usgs.gov/nwis/iv/"
@@ -154,7 +154,7 @@ def get_sites(sites=None, state_code=None, huc=None, bounding_box=None,
         input_file = StringIO.StringIO(str(req.content))
 
     with _open_input_file(input_file) as content_io:
-        return_sites = wml.parse_site_infos(content_io)
+        return_sites = waterml.v1_1.parse_site_infos(content_io)
 
     return_sites = dict([
         (code, _extract_site_properties(site))
@@ -322,7 +322,7 @@ def _get_site_values(service, url_params, input_file=None):
         query_isodate = None
 
     with _open_input_file(input_file) as content_io:
-        data_dict = wml.parse_site_values(content_io, query_isodate)
+        data_dict = waterml.v1_1.parse_site_values(content_io, query_isodate)
 
         for variable_dict in data_dict.values():
             variable_dict['site'] = _extract_site_properties(variable_dict['site'])

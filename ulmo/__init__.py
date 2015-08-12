@@ -7,3 +7,5 @@
 from __future__ import absolute_import
 
 from .version import __version__
+
+from .core.api import list_providers, list_services, load_service

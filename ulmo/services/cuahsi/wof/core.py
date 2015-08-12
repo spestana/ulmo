@@ -13,7 +13,7 @@ import suds
 import isodate
 
 from ulmo import util
-from ulmo import waterml
+from ulmo.parsers import waterml
 
 
 _suds_client = None
