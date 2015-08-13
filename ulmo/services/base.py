@@ -1,12 +1,24 @@
 import abc
 
+
+class ProviderBase(object):
+    def metadata(self):
+        pass
+
+    def list_services(self):
+        pass
+
+    def load_service(self):
+        pass
+
+
 class DataServiceBase(object):
     """Base class for data services plugins
     """
 
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self):
+    def __init__(self, service, **kwargs):
         self.register()
 
     @abc.abstractmethod
