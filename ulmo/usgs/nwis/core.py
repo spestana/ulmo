@@ -25,8 +25,8 @@ from ulmo import util
 import ulmo.waterml.v1_1 as wml
 
 
-INSTANTANEOUS_URL = "http://waterservices.usgs.gov/nwis/iv/"
-DAILY_URL = "http://waterservices.usgs.gov/nwis/dv/"
+INSTANTANEOUS_URL = "https://waterservices.usgs.gov/nwis/iv/"
+DAILY_URL = "https://waterservices.usgs.gov/nwis/dv/"
 
 # configure logging
 LOG_FORMAT = '%(message)s'
