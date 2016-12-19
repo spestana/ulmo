@@ -4,8 +4,11 @@ future
 geojson
 isodate
 lxml
+ndg-httpsclient
 numpy
 pandas
+pyasn1
+pyopenssl
 tables
 pytest
 requests
