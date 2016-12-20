@@ -10,9 +10,9 @@ TEST_FILE_PATH = '/tmp/ulmo_test.h5'
 
 def test_get_sites_by_state_code():
     mocked_urls = {
-        'http://waterservices.usgs.gov/nwis/dv/':
+        'https://waterservices.usgs.gov/nwis/dv/':
             'usgs/nwis/RI_daily.xml',
-        'http://waterservices.usgs.gov/nwis/iv/':
+        'https://waterservices.usgs.gov/nwis/iv/':
             'usgs/nwis/RI_instantaneous.xml',
     }
 
