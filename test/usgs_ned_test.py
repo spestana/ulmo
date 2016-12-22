@@ -25,9 +25,9 @@ test_sets = [
 
 def test_get_raster_availability():
 	for dataset in test_sets:
-		with test_util.mocked_urls(dataset['file']):
-			locs = ulmo.usgs.ned.get_raster_availability(dataset['layer'], dataset['bbox'])
-			assert len(locs['features'])==dataset['number_of_tiles']
+		#with test_util.mocked_urls(dataset['file']):
+		locs = ulmo.usgs.ned.get_raster_availability(dataset['layer'], dataset['bbox'])
+		assert len(locs['features'])==dataset['number_of_tiles']
 
 
 def test_get_raster():
