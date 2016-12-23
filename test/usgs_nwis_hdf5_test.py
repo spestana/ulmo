@@ -472,13 +472,14 @@ def test_last_refresh_gets_updated(test_file_path):
     second_timestamp = '2013-02-02T02:02:02'
     forth_timestamp = '2013-03-03T03:03:03'
     site_code = '01117800'
+    start_date = '2016-11-10'
     site_data_file = test_util.get_test_file_path(
         'usgs/nwis/site_%s_daily.xml' % site_code)
 
     # with test_util.mocked_urls(site_data_file):
     with freezegun.freeze_time(first_timestamp):
         nwis.hdf5.update_site_data(site_code, path=test_file_path,
-                autorepack=False)
+                                   autorepack=False, start=start_date)
     first_refresh = nwis.hdf5._get_last_refresh(site_code, test_file_path)
     assert first_refresh == first_timestamp
 
