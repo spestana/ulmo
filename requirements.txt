@@ -1,15 +1,14 @@
 appdirs
 beautifulsoup4
-cryptography
 future
 geojson
 isodate
 lxml
-ndg-httpsclient
+ndg-httpsclient; python_version < '2.7.9'
 numpy
 pandas
-pyasn1
-pyopenssl
+pyasn1; python_version < '2.7.9'
+pyopenssl; python_version < '2.7.9'
 tables
 pytest
 requests
