@@ -137,6 +137,7 @@ def _twdb_stevens_or_dot(df_row, reverse, drop_dcp_metadata=True):
     '"BV:12.5  451.70$ 451.66$ 451.66$ 451.62$ 451.59$ 451.57$ 451.54$ 451.53$ 451.52$ 451.52$ 451.52$ 451.52$ '
     '"BV:12.2  Channel:5 Time:43 +441.48 +443.25 +440.23 +440.67 +441.26 +441.85 +442.66 +443.84 +445.24 +442.15 +442.88 +443.91 '
     '"BV:12.6  Channel:5 Time:28 +304.63 +304.63 +304.63 +304.56 +304.63 +304.63 +304.63 +304.63 +304.63 +304.63 +304.63 +304.71 Channel:6 Time:28 +310.51 +310.66 +310.59 +310.51 +310.51 +310.59 +310.59 +310.51 +310.66 +310.51 +310.66 +310.59 '
+    'FC:0000 BV:12.7 DA:00000 GA:00719 TE:00115 LA:0111831760 LO:-360989408 MN:00064 989408 MN:00064 9 -278.84 -278.88 -278.84 -278.84 -278.80 -278.84 -278.84 -278.88 -278.84 -278.84 -278.84 -278.80 '
     """
     message = df_row['dcp_message'].strip().lower()
     message_timestamp = df_row['message_timestamp_utc']
@@ -144,10 +145,14 @@ def _twdb_stevens_or_dot(df_row, reverse, drop_dcp_metadata=True):
     if 'bv' in fields[0]:
         battery_voltage = fields[0].split(':')[-1]
         message = ' '.join(fields[1:])
-
+    elif 'bv' in fields[1]:
+        battery_voltage = fields[1].split(':')[-1]
     else:
         battery_voltage = None
         message = ' '.join(fields)
+
+    if 'fc' in fields[0]:
+        message = ' '.join(fields[11:])
 
     fmt = '$+-"\x7f '
 
