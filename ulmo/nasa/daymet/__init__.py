@@ -10,5 +10,6 @@ from . import core
 
 from .core import (get_daymet_singlepixel)
 from .core import (get_variables)
+from .core import (get_daymet_gridded)
 
 from ulmo import util

@@ -17,6 +17,7 @@ import io
 import datetime
 import time
 import logging
+import xarray as xr
 
 import requests
 import pandas as pd
@@ -39,6 +40,8 @@ MAX_LON = -53.0
 
 
 DAYMET_SINGLEPIXEL_URL = "https://daymet.ornl.gov/data/send/saveData?lat={lat}&lon={lon}&measuredParams={vars}"
+DAYMET_GRIDDED_URL = "https://thredds.daac.ornl.gov/thredds/ncss/ornldaac/1328/{year}/daymet_v3_{daymetvar}_{year}_{region}.nc4?var={lat}&var={lon}&var={daymetvar}&north={north}&west={west}&east={east}&south={south}&disableProjSubset={disableProjSubset}&horizStride={horizStride}&time_start={time_start}&time_end={time_end}&timeStride={timeStride}&accept=netcdf"
+
 
 # configure logging
 LOG_FORMAT = '%(message)s'
@@ -122,6 +125,75 @@ def get_daymet_singlepixel(latitude, longitude,
                 results[key] = dict(zip(df[key].index.format(), df[key]))
         return results
 
+def get_daymet_gridded(north, west, east, south, time_start, time_end,
+                           variables=['tmax', 'tmin', 'prcp'], 
+                           horizStride=1, timeStride=1):
+                           
+                           
+    """Fetches a time series of climate variables from the DAYMET NetCDF Subset Service
+
+    Parameters
+    ----------
+    latitude: float
+        The latitude (WGS84), value between 52.0 and 14.5.
+    longitude: float
+        The longitude (WGS84), value between -131.0 and -53.0.
+    variables : list of str
+        Daymet parameters to fetch. default = ['tmax', 'tmin', 'prcp'].
+        Available options:
+            * 'tmax': maximum temperature
+            * 'tmin': minimum temperature
+            * 'srad': shortwave radiation
+            * 'vp': vapor pressure
+            * 'swe': snow-water equivalent
+            * 'prcp': precipitation;
+            * 'dayl' : daylength.
+    dates: list of pandas timstamps
+        Start to end range of days to return. 
+        Daymet version 2 available 1980 to the latest full calendar year.
+
+    Returns
+    -------
+    netcdf filename
+    """
+
+    _check_coordinates(north, west)
+    _check_coordinates(south, east)
+    _check_variables(variables)
+    #_check_years(time_start.year)
+    #_check_years(time_end.year)
+    
+    region = 'na' # North America
+    disableProjSubset = 'on'
+    
+    for daymetvar in variables:
+    
+        url_params = {'lat': "lat",
+                      'lon': "lon",
+                      'daymetvar': daymetvar,
+                      'year': time_start.year,
+                      'region': region,
+                      'north': north,
+                      'west': west,
+                      'east': east,
+                      'south': south,
+                      'disableProjSubset': disableProjSubset,
+                      'horizStride': horizStride,
+                      'time_start': time_start,
+                      'time_end': time_end,
+                      'timeStride': timeStride}
+
+
+    url = _get_gridded_url(url_params)
+    log.info("making request for gridded data within latitude, longitude: {} - {}, {} - {}".format(north, south, east, west))
+    ds = xr.open_dataset(url)
+    
+    filename, _ = url.split('?')
+    
+    ds.to_netcdf(filename)
+    
+    return filename
+
 
 def _check_variables(variables):
     """make sure all variables are in list
@@ -172,4 +244,11 @@ def _get_service_url(url_params):
 
     if 'years' in url_params:
         url += "&year={}".format(url_params['years'])
+    return url
+    
+def _get_gridded_url(url_params):
+    """return formatted url for gridded data
+    """
+    url = DAYMET_GRIDDED_URL.format(**url_params)
+
     return url
